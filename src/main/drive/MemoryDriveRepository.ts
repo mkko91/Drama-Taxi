@@ -29,7 +29,7 @@ export class MemoryDriveRepository extends DriveRepository {
   }
 
   async getDrives(): Promise<Drive[]> {
-    const drives = await DriveSchema.find();
+    const drives = await DriveSchema.find().sort([['requestAt', 'descending']]);
 
     return _.map(drives, (drive) => this.makeReturnDrive(drive));
   }
@@ -47,13 +47,10 @@ export class MemoryDriveRepository extends DriveRepository {
       $set: bodyParams
     });
 
-    console.log(drive);
-
     return this.makeReturnDrive(drive);
   }
 
   private getDriveStatusByNumber(status: Number): DriveStatus {
-    console.log(status);
     if (status === DriveStatus.Waiting) {
       return DriveStatus.Waiting;
     } else if (status === DriveStatus.Complete) {
